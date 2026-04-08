@@ -20,8 +20,16 @@ export const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [certificateType, setCertificateType] = useState('');
-  const [details, setDetails] = useState('');
+  const [formData, setFormData] = useState({
+    certificate_type: '',
+    details: '',
+    applicant_name: '',
+    father_name: '',
+    address: '',
+    phone: '',
+    aadhar_number: '',
+    purpose: ''
+  });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -48,12 +56,20 @@ export const Certificates = () => {
     try {
       await axios.post(
         `${BACKEND_URL}/api/certificates`,
-        { certificate_type: certificateType, details },
+        formData,
         { withCredentials: true }
       );
       toast.success('Application submitted successfully!');
-      setCertificateType('');
-      setDetails('');
+      setFormData({
+        certificate_type: '',
+        details: '',
+        applicant_name: '',
+        father_name: '',
+        address: '',
+        phone: '',
+        aadhar_number: '',
+        purpose: ''
+      });
       setDialogOpen(false);
       fetchCertificates();
     } catch (error) {
@@ -118,8 +134,12 @@ export const Certificates = () => {
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4" data-testid="certificate-form">
               <div className="space-y-2">
-                <Label htmlFor="certificate-type">Certificate Type</Label>
-                <Select value={certificateType} onValueChange={setCertificateType} required>
+                <Label htmlFor="certificate-type">Certificate Type *</Label>
+                <Select 
+                  value={formData.certificate_type} 
+                  onValueChange={(value) => setFormData({...formData, certificate_type: value})} 
+                  required
+                >
                   <SelectTrigger className="border-[#DCD7CB]" data-testid="certificate-type-select">
                     <SelectValue placeholder="Select certificate type" />
                   </SelectTrigger>
@@ -132,19 +152,104 @@ export const Certificates = () => {
                   </SelectContent>
                 </Select>
               </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="applicant-name">Applicant Name *</Label>
+                  <Input
+                    id="applicant-name"
+                    value={formData.applicant_name}
+                    onChange={(e) => setFormData({...formData, applicant_name: e.target.value})}
+                    required
+                    className="border-[#DCD7CB]"
+                    placeholder="Full Name"
+                    data-testid="applicant-name-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="father-name">Father's Name *</Label>
+                  <Input
+                    id="father-name"
+                    value={formData.father_name}
+                    onChange={(e) => setFormData({...formData, father_name: e.target.value})}
+                    required
+                    className="border-[#DCD7CB]"
+                    placeholder="Father's Full Name"
+                    data-testid="father-name-input"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cert-address">Address *</Label>
+                <Textarea
+                  id="cert-address"
+                  value={formData.address}
+                  onChange={(e) => setFormData({...formData, address: e.target.value})}
+                  required
+                  rows={2}
+                  className="border-[#DCD7CB]"
+                  placeholder="Complete residential address"
+                  data-testid="cert-address-input"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cert-phone">Phone Number *</Label>
+                  <Input
+                    id="cert-phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    required
+                    className="border-[#DCD7CB]"
+                    placeholder="+91 98765 43210"
+                    data-testid="cert-phone-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="aadhar-number">Aadhar Number *</Label>
+                  <Input
+                    id="aadhar-number"
+                    value={formData.aadhar_number}
+                    onChange={(e) => setFormData({...formData, aadhar_number: e.target.value})}
+                    required
+                    className="border-[#DCD7CB]"
+                    placeholder="XXXX XXXX XXXX"
+                    maxLength={12}
+                    data-testid="aadhar-number-input"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="purpose">Purpose *</Label>
+                <Input
+                  id="purpose"
+                  value={formData.purpose}
+                  onChange={(e) => setFormData({...formData, purpose: e.target.value})}
+                  required
+                  className="border-[#DCD7CB]"
+                  placeholder="Purpose of certificate (e.g., School admission, Bank loan)"
+                  data-testid="purpose-input"
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="certificate-details">Additional Details</Label>
                 <Textarea
                   id="certificate-details"
-                  value={details}
-                  onChange={(e) => setDetails(e.target.value)}
+                  value={formData.details}
+                  onChange={(e) => setFormData({...formData, details: e.target.value})}
                   required
-                  rows={4}
+                  rows={3}
                   className="border-[#DCD7CB]"
                   placeholder="Provide any additional information required for this certificate"
                   data-testid="certificate-details-input"
                 />
               </div>
+              
               <Button
                 type="submit"
                 disabled={submitting}

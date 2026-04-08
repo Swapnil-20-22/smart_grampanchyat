@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Card } from './ui/card';
 import { FileText, Award, Receipt, Bell } from 'lucide-react';
@@ -51,24 +52,24 @@ export const DashboardOverview = () => {
         <Card className="p-8 border border-[#DCD7CB] bg-white">
           <h3 className="text-xl font-medium text-[#1A1A1A] mb-4">Quick Actions</h3>
           <div className="space-y-3">
-            <a
-              href="/dashboard/complaints"
+            <Link
+              to="/dashboard/complaints"
               className="block p-4 border border-[#DCD7CB] rounded-lg hover:bg-[#F3F1EC] transition-colors duration-200"
             >
               <p className="font-medium text-[#1A1A1A]">Submit a Complaint</p>
               <p className="text-sm text-[#4A4A4A] mt-1">
                 Report issues in your area
               </p>
-            </a>
-            <a
-              href="/dashboard/certificates"
+            </Link>
+            <Link
+              to="/dashboard/certificates"
               className="block p-4 border border-[#DCD7CB] rounded-lg hover:bg-[#F3F1EC] transition-colors duration-200"
             >
               <p className="font-medium text-[#1A1A1A]">Apply for Certificate</p>
               <p className="text-sm text-[#4A4A4A] mt-1">
                 Request official certificates
               </p>
-            </a>
+            </Link>
           </div>
         </Card>
 

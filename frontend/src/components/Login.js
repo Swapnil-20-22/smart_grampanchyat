@@ -51,6 +51,9 @@ export const Login = () => {
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-[#1A1A1A] mb-2">Welcome Back</h2>
             <p className="text-[#4A4A4A]">Sign in to access your dashboard</p>
+            <p className="text-sm text-[#4A4A4A] mt-2">
+              (For both Users and Administrators)
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

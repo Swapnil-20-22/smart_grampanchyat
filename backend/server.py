@@ -114,11 +114,19 @@ class UserResponse(BaseModel):
 class ComplaintCreate(BaseModel):
     title: str
     description: str
+    complainant_name: str
+    phone: str
+    address: str
+    category: str
 
 class ComplaintResponse(BaseModel):
     id: str
     title: str
     description: str
+    complainant_name: str
+    phone: str
+    address: str
+    category: str
     status: Literal["Pending", "In Progress", "Resolved"]
     user_id: str
     user_name: str
@@ -131,11 +139,23 @@ class ComplaintStatusUpdate(BaseModel):
 class CertificateCreate(BaseModel):
     certificate_type: str
     details: str
+    applicant_name: str
+    father_name: str
+    address: str
+    phone: str
+    aadhar_number: str
+    purpose: str
 
 class CertificateResponse(BaseModel):
     id: str
     certificate_type: str
     details: str
+    applicant_name: str
+    father_name: str
+    address: str
+    phone: str
+    aadhar_number: str
+    purpose: str
     status: Literal["Pending", "Approved", "Rejected"]
     user_id: str
     user_name: str
@@ -243,6 +263,18 @@ async def seed_sample_data():
                 "position": "Secretary",
                 "photo_url": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400",
                 "contact": "+91 98765 43213"
+            },
+            {
+                "name": "Ramesh Patel",
+                "position": "Ward Member",
+                "photo_url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+                "contact": "+91 98765 43214"
+            },
+            {
+                "name": "Geeta Sharma",
+                "position": "Ward Member",
+                "photo_url": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400",
+                "contact": "+91 98765 43215"
             }
         ]
         await db.members.insert_many(members)
@@ -262,6 +294,27 @@ async def seed_sample_data():
                 "amount": 1500.00,
                 "due_date": "2026-03-31",
                 "description": "Quarterly property tax",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "Sanitation Charges - January 2026",
+                "amount": 100.00,
+                "due_date": "2026-01-31",
+                "description": "Monthly sanitation and waste management charges",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "Street Light Maintenance - February 2026",
+                "amount": 75.00,
+                "due_date": "2026-02-28",
+                "description": "Street light maintenance fee",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "Community Hall Rental - March 2026",
+                "amount": 500.00,
+                "due_date": "2026-03-15",
+                "description": "Community hall booking charges",
                 "created_at": datetime.now(timezone.utc).isoformat()
             }
         ]
@@ -283,6 +336,27 @@ async def seed_sample_data():
                 "date": "2026-01-10T14:00:00",
                 "location": "Community Hall",
                 "status": "Completed"
+            },
+            {
+                "title": "Health & Sanitation Drive Planning",
+                "agenda": "Planning for village-wide cleanliness campaign",
+                "date": "2026-02-20T11:00:00",
+                "location": "Gram Panchayat Office",
+                "status": "Upcoming"
+            },
+            {
+                "title": "Agricultural Subsidy Distribution",
+                "agenda": "Discussion on farmer subsidies and distribution process",
+                "date": "2025-12-28T10:00:00",
+                "location": "Community Hall",
+                "status": "Completed"
+            },
+            {
+                "title": "Education Committee Meeting",
+                "agenda": "Review of school infrastructure and teacher requirements",
+                "date": "2026-02-25T15:00:00",
+                "location": "Village School",
+                "status": "Upcoming"
             }
         ]
         await db.meetings.insert_many(meetings)
@@ -299,6 +373,30 @@ async def seed_sample_data():
             {
                 "title": "Vaccination Drive",
                 "content": "Free vaccination drive for children on 25th January at Community Health Center.",
+                "priority": "Medium",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "Property Tax Collection Drive",
+                "content": "Property tax collection drive starting from 1st February. Please pay your dues to avoid penalties.",
+                "priority": "High",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "Community Cleanliness Drive",
+                "content": "Join us for a community cleanliness drive on 15th February. All villagers are requested to participate.",
+                "priority": "Medium",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "New Street Lights Installation",
+                "content": "New LED street lights will be installed in Ward 3 and Ward 4 starting next week.",
+                "priority": "Low",
+                "created_at": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "title": "Free Legal Aid Camp",
+                "content": "Free legal aid camp on 18th February at Gram Panchayat Office. Timings: 10 AM to 4 PM.",
                 "priority": "Medium",
                 "created_at": datetime.now(timezone.utc).isoformat()
             }
@@ -419,6 +517,10 @@ async def create_complaint(complaint: ComplaintCreate, request: Request):
     complaint_doc = {
         "title": complaint.title,
         "description": complaint.description,
+        "complainant_name": complaint.complainant_name,
+        "phone": complaint.phone,
+        "address": complaint.address,
+        "category": complaint.category,
         "status": "Pending",
         "user_id": user["_id"],
         "user_name": user["name"],
@@ -466,6 +568,12 @@ async def create_certificate(certificate: CertificateCreate, request: Request):
     cert_doc = {
         "certificate_type": certificate.certificate_type,
         "details": certificate.details,
+        "applicant_name": certificate.applicant_name,
+        "father_name": certificate.father_name,
+        "address": certificate.address,
+        "phone": certificate.phone,
+        "aadhar_number": certificate.aadhar_number,
+        "purpose": certificate.purpose,
         "status": "Pending",
         "user_id": user["_id"],
         "user_name": user["name"],

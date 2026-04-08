@@ -22,6 +22,10 @@ export const Complaints = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [complainantName, setComplainantName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [category, setCategory] = useState('Infrastructure');
   const [statusFilter, setStatusFilter] = useState('All');
   const [submitting, setSubmitting] = useState(false);
 
@@ -49,12 +53,23 @@ export const Complaints = () => {
     try {
       await axios.post(
         `${BACKEND_URL}/api/complaints`,
-        { title, description },
+        { 
+          title, 
+          description,
+          complainant_name: complainantName,
+          phone,
+          address,
+          category
+        },
         { withCredentials: true }
       );
       toast.success('Complaint submitted successfully!');
       setTitle('');
       setDescription('');
+      setComplainantName('');
+      setPhone('');
+      setAddress('');
+      setCategory('Infrastructure');
       setDialogOpen(false);
       fetchComplaints();
     } catch (error) {
@@ -122,19 +137,76 @@ export const Complaints = () => {
               <DialogTitle className="text-[#1A1A1A]">Submit New Complaint</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4" data-testid="complaint-form">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="complainant-name">Your Name *</Label>
+                  <Input
+                    id="complainant-name"
+                    value={complainantName}
+                    onChange={(e) => setComplainantName(e.target.value)}
+                    required
+                    className="border-[#DCD7CB]"
+                    data-testid="complainant-name-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="complainant-phone">Phone Number *</Label>
+                  <Input
+                    id="complainant-phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="border-[#DCD7CB]"
+                    placeholder="+91 98765 43210"
+                    data-testid="complainant-phone-input"
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="complaint-title">Title</Label>
+                <Label htmlFor="complainant-address">Address *</Label>
+                <Input
+                  id="complainant-address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                  className="border-[#DCD7CB]"
+                  placeholder="Ward No., Street, Village"
+                  data-testid="complainant-address-input"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="complaint-category">Category *</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="border-[#DCD7CB]" data-testid="complaint-category-select">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white">
+                    <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                    <SelectItem value="Water Supply">Water Supply</SelectItem>
+                    <SelectItem value="Electricity">Electricity</SelectItem>
+                    <SelectItem value="Sanitation">Sanitation</SelectItem>
+                    <SelectItem value="Road">Road</SelectItem>
+                    <SelectItem value="Street Light">Street Light</SelectItem>
+                    <SelectItem value="Drainage">Drainage</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="complaint-title">Title *</Label>
                 <Input
                   id="complaint-title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
                   className="border-[#DCD7CB]"
+                  placeholder="Brief title of your complaint"
                   data-testid="complaint-title-input"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="complaint-description">Description</Label>
+                <Label htmlFor="complaint-description">Description *</Label>
                 <Textarea
                   id="complaint-description"
                   value={description}
@@ -142,6 +214,7 @@ export const Complaints = () => {
                   required
                   rows={4}
                   className="border-[#DCD7CB]"
+                  placeholder="Provide detailed description of your complaint"
                   data-testid="complaint-description-input"
                 />
               </div>
