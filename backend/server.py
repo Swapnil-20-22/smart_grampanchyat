@@ -532,7 +532,7 @@ async def create_complaint(complaint: ComplaintCreate, request: Request):
     complaint_doc.pop("_id", None)
     return complaint_doc
 
-@api_router.get("/complaints", response_model=List[ComplaintResponse])
+@api_router.get("/complaints")
 async def get_complaints(request: Request):
     user = await get_current_user(request)
     if user["role"] == "admin":
@@ -585,7 +585,7 @@ async def create_certificate(certificate: CertificateCreate, request: Request):
     cert_doc.pop("_id", None)
     return cert_doc
 
-@api_router.get("/certificates", response_model=List[CertificateResponse])
+@api_router.get("/certificates")
 async def get_certificates(request: Request):
     user = await get_current_user(request)
     if user["role"] == "admin":
@@ -615,7 +615,7 @@ async def update_certificate_status(
     return {"message": "Status updated successfully"}
 
 # Bills Routes
-@api_router.get("/bills", response_model=List[BillResponse])
+@api_router.get("/bills")
 async def get_bills(request: Request):
     await get_current_user(request)
     bills = await db.bills.find({}).to_list(1000)
@@ -625,7 +625,7 @@ async def get_bills(request: Request):
     return bills
 
 # Meetings Routes
-@api_router.get("/meetings", response_model=List[MeetingResponse])
+@api_router.get("/meetings")
 async def get_meetings(request: Request):
     await get_current_user(request)
     meetings = await db.meetings.find({}).to_list(1000)
@@ -635,7 +635,7 @@ async def get_meetings(request: Request):
     return meetings
 
 # Members Routes
-@api_router.get("/members", response_model=List[MemberResponse])
+@api_router.get("/members")
 async def get_members(request: Request):
     await get_current_user(request)
     members = await db.members.find({}).to_list(1000)
@@ -645,7 +645,7 @@ async def get_members(request: Request):
     return members
 
 # Notices Routes
-@api_router.get("/notices", response_model=List[NoticeResponse])
+@api_router.get("/notices")
 async def get_notices(request: Request):
     await get_current_user(request)
     notices = await db.notices.find({}).to_list(1000)
@@ -735,7 +735,7 @@ class UserListResponse(BaseModel):
     role: str
     created_at: str
 
-@api_router.get("/admin/users", response_model=List[UserListResponse])
+@api_router.get("/admin/users")
 async def get_all_users(request: Request):
     await get_current_admin(request)
     users = await db.users.find({}, {"password_hash": 0}).to_list(1000)
@@ -786,7 +786,7 @@ class ReportsResponse(BaseModel):
     complaints_by_status: dict
     certificates_by_status: dict
 
-@api_router.get("/admin/reports", response_model=ReportsResponse)
+@api_router.get("/admin/reports")
 async def get_admin_reports(request: Request):
     await get_current_admin(request)
     

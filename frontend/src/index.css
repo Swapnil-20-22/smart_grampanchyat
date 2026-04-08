@@ -61,6 +61,18 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* Hide Emergent watermark */
+[href*="emergentagent.com"] img[alt*="Emergent"],
+[href*="emergentagent.com"]:has(img),
+a[href*="emergentagent.com"]:contains("Made with"),
+div:has(> a[href*="emergentagent.com"]),
+button:has(> a[href*="emergentagent.com"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 @media print {
     .no-print {
         display: none !important;

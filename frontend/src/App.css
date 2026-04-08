@@ -10,3 +10,13 @@ body {
 .App {
   min-height: 100vh;
 }
+
+/* Hide Emergent watermark */
+[class*="sc-"][class*="emergent"],
+div[class*="fixed"][class*="bottom"],
+div[class*="fixed"][class*="right"],
+a[href*="emergentagent"],
+button:has(svg):has([d*="M12"]),
+div:has(> button:has(svg)):has(button[class*="fixed"]) {
+  display: none !important;
+}
