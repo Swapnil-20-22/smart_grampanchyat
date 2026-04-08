@@ -546,6 +546,179 @@ async def get_notices(request: Request):
         notice.pop("_id", None)
     return notices
 
+# Admin: Create Notice
+class NoticeCreate(BaseModel):
+    title: str
+    content: str
+    priority: Literal["Low", "Medium", "High"]
+
+@api_router.post("/admin/notices")
+async def create_notice(notice: NoticeCreate, request: Request):
+    await get_current_admin(request)
+    notice_doc = {
+        "title": notice.title,
+        "content": notice.content,
+        "priority": notice.priority,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    result = await db.notices.insert_one(notice_doc)
+    notice_doc["id"] = str(result.inserted_id)
+    notice_doc.pop("_id", None)
+    return notice_doc
+
+# Admin: Delete Notice
+@api_router.delete("/admin/notices/{notice_id}")
+async def delete_notice(notice_id: str, request: Request):
+    await get_current_admin(request)
+    result = await db.notices.delete_one({"_id": ObjectId(notice_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Notice not found")
+    return {"message": "Notice deleted successfully"}
+
+# Admin: Create Meeting
+class MeetingCreate(BaseModel):
+    title: str
+    agenda: str
+    date: str
+    location: str
+    status: Literal["Upcoming", "Completed"] = "Upcoming"
+
+@api_router.post("/admin/meetings")
+async def create_meeting(meeting: MeetingCreate, request: Request):
+    await get_current_admin(request)
+    meeting_doc = {
+        "title": meeting.title,
+        "agenda": meeting.agenda,
+        "date": meeting.date,
+        "location": meeting.location,
+        "status": meeting.status
+    }
+    result = await db.meetings.insert_one(meeting_doc)
+    meeting_doc["id"] = str(result.inserted_id)
+    meeting_doc.pop("_id", None)
+    return meeting_doc
+
+# Admin: Update Meeting
+@api_router.patch("/admin/meetings/{meeting_id}")
+async def update_meeting(meeting_id: str, meeting: MeetingCreate, request: Request):
+    await get_current_admin(request)
+    result = await db.meetings.update_one(
+        {"_id": ObjectId(meeting_id)},
+        {"$set": meeting.model_dump()}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Meeting not found")
+    return {"message": "Meeting updated successfully"}
+
+# Admin: Delete Meeting
+@api_router.delete("/admin/meetings/{meeting_id}")
+async def delete_meeting(meeting_id: str, request: Request):
+    await get_current_admin(request)
+    result = await db.meetings.delete_one({"_id": ObjectId(meeting_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Meeting not found")
+    return {"message": "Meeting deleted successfully"}
+
+# Admin: Get All Users
+class UserListResponse(BaseModel):
+    id: str
+    email: str
+    name: str
+    role: str
+    created_at: str
+
+@api_router.get("/admin/users", response_model=List[UserListResponse])
+async def get_all_users(request: Request):
+    await get_current_admin(request)
+    users = await db.users.find({}, {"password_hash": 0}).to_list(1000)
+    for user in users:
+        user["id"] = str(user["_id"])
+        user.pop("_id", None)
+        if isinstance(user.get("created_at"), datetime):
+            user["created_at"] = user["created_at"].isoformat()
+    return users
+
+# Admin: Update User Role
+class UserRoleUpdate(BaseModel):
+    role: Literal["user", "admin"]
+
+@api_router.patch("/admin/users/{user_id}/role")
+async def update_user_role(user_id: str, role_update: UserRoleUpdate, request: Request):
+    await get_current_admin(request)
+    result = await db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"role": role_update.role}}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User role updated successfully"}
+
+# Admin: Delete User
+@api_router.delete("/admin/users/{user_id}")
+async def delete_user(user_id: str, request: Request):
+    admin = await get_current_admin(request)
+    if admin["_id"] == user_id:
+        raise HTTPException(status_code=400, detail="Cannot delete your own account")
+    result = await db.users.delete_one({"_id": ObjectId(user_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User deleted successfully"}
+
+# Admin: Reports Dashboard
+class ReportsResponse(BaseModel):
+    total_users: int
+    total_complaints: int
+    pending_complaints: int
+    in_progress_complaints: int
+    resolved_complaints: int
+    total_certificates: int
+    pending_certificates: int
+    approved_certificates: int
+    rejected_certificates: int
+    complaints_by_status: dict
+    certificates_by_status: dict
+
+@api_router.get("/admin/reports", response_model=ReportsResponse)
+async def get_admin_reports(request: Request):
+    await get_current_admin(request)
+    
+    # Count users
+    total_users = await db.users.count_documents({})
+    
+    # Count complaints
+    total_complaints = await db.complaints.count_documents({})
+    pending_complaints = await db.complaints.count_documents({"status": "Pending"})
+    in_progress_complaints = await db.complaints.count_documents({"status": "In Progress"})
+    resolved_complaints = await db.complaints.count_documents({"status": "Resolved"})
+    
+    # Count certificates
+    total_certificates = await db.certificates.count_documents({})
+    pending_certificates = await db.certificates.count_documents({"status": "Pending"})
+    approved_certificates = await db.certificates.count_documents({"status": "Approved"})
+    rejected_certificates = await db.certificates.count_documents({"status": "Rejected"})
+    
+    return {
+        "total_users": total_users,
+        "total_complaints": total_complaints,
+        "pending_complaints": pending_complaints,
+        "in_progress_complaints": in_progress_complaints,
+        "resolved_complaints": resolved_complaints,
+        "total_certificates": total_certificates,
+        "pending_certificates": pending_certificates,
+        "approved_certificates": approved_certificates,
+        "rejected_certificates": rejected_certificates,
+        "complaints_by_status": {
+            "Pending": pending_complaints,
+            "In Progress": in_progress_complaints,
+            "Resolved": resolved_complaints
+        },
+        "certificates_by_status": {
+            "Pending": pending_certificates,
+            "Approved": approved_certificates,
+            "Rejected": rejected_certificates
+        }
+    }
+
 # Include router
 app.include_router(api_router)
 

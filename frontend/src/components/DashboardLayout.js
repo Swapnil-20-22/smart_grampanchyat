@@ -26,7 +26,7 @@ export const DashboardLayout = () => {
     navigate('/login');
   };
 
-  const navItems = [
+  const userNavItems = [
     { path: '/dashboard', label: 'Overview', icon: Home },
     { path: '/dashboard/complaints', label: 'Complaints', icon: FileText },
     { path: '/dashboard/certificates', label: 'Certificates', icon: Award },
@@ -35,6 +35,17 @@ export const DashboardLayout = () => {
     { path: '/dashboard/members', label: 'Members', icon: Users },
     { path: '/dashboard/notices', label: 'Notices', icon: Bell },
   ];
+
+  const adminNavItems = [
+    { path: '/dashboard/admin/reports', label: 'Admin Reports', icon: Home },
+    { path: '/dashboard/admin/users', label: 'Manage Users', icon: Users },
+    { path: '/dashboard/admin/meetings', label: 'Manage Meetings', icon: Calendar },
+    { path: '/dashboard/admin/notices', label: 'Manage Notices', icon: Bell },
+  ];
+
+  const navItems = user?.role === 'admin' 
+    ? [...userNavItems, ...adminNavItems] 
+    : userNavItems;
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -55,12 +66,12 @@ export const DashboardLayout = () => {
       </div>
 
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-[#F3F1EC] border-r border-[#DCD7CB] z-40 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-[#F3F1EC] border-r border-[#DCD7CB] z-40 transition-transform duration-300 flex flex-col ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
         data-testid="dashboard-sidebar"
       >
-        <div className="p-6 border-b border-[#DCD7CB]">
+        <div className="p-6 border-b border-[#DCD7CB] flex-shrink-0">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-10 h-10 bg-[#2D4238] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">GP</span>
@@ -78,7 +89,7 @@ export const DashboardLayout = () => {
           </div>
         </div>
 
-        <nav className="p-4 space-y-1">
+        <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -101,7 +112,7 @@ export const DashboardLayout = () => {
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#DCD7CB]">
+        <div className="p-4 border-t border-[#DCD7CB] flex-shrink-0">
           <Button
             onClick={handleLogout}
             variant="ghost"

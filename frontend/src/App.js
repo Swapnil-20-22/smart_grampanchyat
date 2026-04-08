@@ -13,6 +13,10 @@ import { Bills } from './components/Bills';
 import { Meetings } from './components/Meetings';
 import { Members } from './components/Members';
 import { Notices } from './components/Notices';
+import { AdminReports } from './components/AdminReports';
+import { AdminUsers } from './components/AdminUsers';
+import { AdminMeetings } from './components/AdminMeetings';
+import { AdminNotices } from './components/AdminNotices';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
 
@@ -40,6 +44,10 @@ function App() {
             <Route path="meetings" element={<Meetings />} />
             <Route path="members" element={<Members />} />
             <Route path="notices" element={<Notices />} />
+            <Route path="admin/reports" element={<AdminReports />} />
+            <Route path="admin/users" element={<AdminUsers />} />
+            <Route path="admin/meetings" element={<AdminMeetings />} />
+            <Route path="admin/notices" element={<AdminNotices />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
