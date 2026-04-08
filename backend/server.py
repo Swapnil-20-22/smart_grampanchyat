@@ -197,8 +197,8 @@ class NoticeResponse(BaseModel):
 
 # Admin Seeding
 async def seed_admin():
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@grampanchayat.com")
-    admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@admin.com")
+    admin_password = os.environ.get("ADMIN_PASSWORD", "admin")
     
     existing = await db.users.find_one({"email": admin_email})
     if existing is None:
