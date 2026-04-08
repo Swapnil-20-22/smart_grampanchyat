@@ -123,10 +123,10 @@ class ComplaintResponse(BaseModel):
     id: str
     title: str
     description: str
-    complainant_name: str
-    phone: str
-    address: str
-    category: str
+    complainant_name: Optional[str] = ""
+    phone: Optional[str] = ""
+    address: Optional[str] = ""
+    category: Optional[str] = "Other"
     status: Literal["Pending", "In Progress", "Resolved"]
     user_id: str
     user_name: str
@@ -150,12 +150,12 @@ class CertificateResponse(BaseModel):
     id: str
     certificate_type: str
     details: str
-    applicant_name: str
-    father_name: str
-    address: str
-    phone: str
-    aadhar_number: str
-    purpose: str
+    applicant_name: Optional[str] = ""
+    father_name: Optional[str] = ""
+    address: Optional[str] = ""
+    phone: Optional[str] = ""
+    aadhar_number: Optional[str] = ""
+    purpose: Optional[str] = ""
     status: Literal["Pending", "Approved", "Rejected"]
     user_id: str
     user_name: str

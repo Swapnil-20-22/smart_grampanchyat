@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card } from './ui/card';
+import { Button } from './ui/button';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Users, FileText, Award, TrendingUp } from 'lucide-react';
+import { Users, FileText, Award, TrendingUp, Printer } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -33,6 +34,10 @@ export const AdminReports = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   if (user?.role !== 'admin') {
@@ -72,13 +77,28 @@ export const AdminReports = () => {
 
   return (
     <div className="space-y-6" data-testid="admin-reports">
-      <div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-[#1A1A1A] tracking-tight">
-          Admin Reports
-        </h1>
-        <p className="text-base text-[#4A4A4A] mt-2">
-          Overview of system statistics and analytics
-        </p>
+      <div className="flex items-center justify-between no-print">
+        <div>
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#1A1A1A] tracking-tight">
+            Admin Reports
+          </h1>
+          <p className="text-base text-[#4A4A4A] mt-2">
+            Overview of system statistics and analytics
+          </p>
+        </div>
+        <Button
+          onClick={handlePrint}
+          className="bg-[#2D4238] hover:bg-[#1E2D26] text-white"
+          data-testid="print-report-button"
+        >
+          <Printer size={20} className="mr-2" />
+          Print Report
+        </Button>
+      </div>
+
+      <div className="print-title hidden">
+        <h1 className="text-3xl font-bold text-center mb-2">Gram Panchayat - Admin Reports</h1>
+        <p className="text-center text-gray-600 mb-6">Generated on {new Date().toLocaleDateString()}</p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
