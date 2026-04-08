@@ -1,0 +1,94 @@
+{
+  "theme": "light",
+  "archetype": "Organic & Earthy (Archetype 1)",
+  "design_philosophy": "Civic tech must feel trustworthy, grounded, and highly accessible. Avoiding the generic SaaS 'tech-bro' dark mode. Embracing warm, natural tones reflecting rural India but with a premium, modern 'Old Money Tech' structural rigor. Focus is on clear data presentation and a welcoming public-facing interface.",
+  "colors": {
+    "background": "#FAFAFA",
+    "background_secondary": "#F3F1EC",
+    "primary": "#2D4238",
+    "primary_foreground": "#FFFFFF",
+    "secondary": "#E5E0D8",
+    "secondary_foreground": "#1A1A1A",
+    "accent": "#C84B31",
+    "accent_foreground": "#FFFFFF",
+    "text_primary": "#1A1A1A",
+    "text_secondary": "#4A4A4A",
+    "border": "#DCD7CB",
+    "success": "#3A654D",
+    "warning": "#D97736",
+    "error": "#B23A3A"
+  },
+  "typography": {
+    "heading_font": "Cabinet Grotesk",
+    "body_font": "Work Sans",
+    "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#1A1A1A] font-bold",
+    "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight text-[#1A1A1A] font-semibold",
+    "h3": "text-xl sm:text-2xl font-medium text-[#1A1A1A]",
+    "body": "text-base leading-relaxed text-[#4A4A4A]",
+    "label": "text-sm tracking-[0.05em] uppercase font-semibold text-[#4A4A4A]"
+  },
+  "layout_and_spacing": {
+    "generous_spacing": "Use p-8 to p-12 for landing page sections. Dashboard should use p-6.",
+    "grid_strategy_marketing": "Mode A: The 'Tetris' Grid for landing page feature showcases. Mix col-span-4 and col-span-8 for asymmetry. Add generous gap-8.",
+    "grid_strategy_dashboard": "Mode B: The 'Control Room' Grid. Dense, 1px borders, tight gap-4 or gap-6 for metrics and tables. Optimize for scanability.",
+    "border_radius": "Subtle roundness: rounded-lg (8px) or rounded-xl (12px) max. Avoid heavily rounded pill shapes."
+  },
+  "surfaces_and_components": {
+    "headers": "Solid background bg-[#FAFAFA] with a sharp 1px bottom border border-[#DCD7CB]. Do not use glassmorphism.",
+    "dashboard_cards": "Flat background bg-white, 1px subtle border border-[#DCD7CB], no shadow by default. Hover: slight lift -translate-y-1 and shadow-sm.",
+    "buttons": "Primary buttons: bg-[#2D4238] text-white hover:bg-[#1E2D26]. Secondary: border border-[#DCD7CB] text-[#1A1A1A]. Use rounded-md.",
+    "tables": "Use Shadcn Table. Left-align text. Zebra striping or subtle border-b on rows. Action items on the far right.",
+    "forms": "Use Shadcn Form/Input. Input fields should have bg-white and border-[#DCD7CB]. Focus ring must be ring-[#2D4238]."
+  },
+  "animation_and_motion": {
+    "hover_states": "All buttons and cards must have transition-transform and transition-colors duration-200.",
+    "page_transitions": "Staggered fade-up for lists (Complaints, Certificates) using Framer Motion.",
+    "accessibility": "Respect prefers-reduced-motion."
+  },
+  "image_urls": [
+    {
+      "category": "hero_background",
+      "description": "Premium wide-angle shot of Gram Panchayat courtyard. Use as the main visual for the landing page.",
+      "url": "https://static.prod-images.emergentagent.com/jobs/569c15bc-4853-46ef-9990-7587e9086d0c/images/e3f94f6b5ec65b82c8dcbca51e3893423ba0577785c2a85ace15252c1c676499.png"
+    },
+    {
+      "category": "abstract_background",
+      "description": "Abstract warm sand and sage green pattern. Use for login/signup backgrounds or secondary marketing sections.",
+      "url": "https://static.prod-images.emergentagent.com/jobs/569c15bc-4853-46ef-9990-7587e9086d0c/images/f3c0cb04c86610c4bb38260b344bbd7efd89135436a98246bef64487796e482f.png"
+    },
+    {
+      "category": "panchayat_member_1",
+      "description": "Portrait for Sarpanch / Senior Member in the Panchayat Members directory.",
+      "url": "https://images.unsplash.com/photo-1649433658557-54cf58577c68?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHwzfHxpbmRpYW4lMjBwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NzU2MzI2NDd8MA&ixlib=rb-4.1.0&q=85"
+    },
+    {
+      "category": "panchayat_member_2",
+      "description": "Portrait for Deputy Sarpanch / Member in the Panchayat Members directory.",
+      "url": "https://images.pexels.com/photos/7580822/pexels-photo-7580822.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "category": "village_landscape",
+      "description": "Village landscape image. Can be used in the About section or Landing Page overview.",
+      "url": "https://images.unsplash.com/photo-1774615600073-5e04e3082108?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHw0fHxpbmRpYW4lMjB2aWxsYWdlJTIwcnVyYWwlMjBsYW5kc2NhcGV8ZW58MHx8fHwxNzc1NjMyNjQ3fDA&ixlib=rb-4.1.0&q=85"
+    }
+  ],
+  "component_instructions": {
+    "navigation": "Sticky top nav. Includes Logo (text), links (Home, Dashboard, Login), primary CTA. Must have a bg-white/90 backdrop-blur-md.",
+    "sidebar": "Fixed sidebar on dashboard. Warm sand background bg-[#F3F1EC]. High contrast text for active state.",
+    "complaints_section": "List view using Shadcn Table or dense Cards. Status badges: Pending (warning color), In Progress (blue/info), Resolved (success color).",
+    "certificates_section": "Split view: Form for application, and tracking table below it. Keep form inputs clear and labeled.",
+    "bills_section": "View-only table. Emphasize read-only amounts and dates clearly.",
+    "meetings_section": "Timeline or simple list view showing upcoming and past meetings. Highlight dates and agenda.",
+    "notices_board": "A dedicated card stack or prominent alert banner for urgent village announcements.",
+    "admin_dashboard": "Focus on tabular data for managing Certificates and Complaints with quick action buttons (Approve/Reject)."
+  },
+  "testing_attributes": {
+    "requirement": "All interactive elements MUST include data-testid attribute.",
+    "examples": [
+      "data-testid='login-submit-button'",
+      "data-testid='complaint-submit-btn'",
+      "data-testid='certificate-apply-btn'",
+      "data-testid='admin-approve-cert-btn'"
+    ]
+  }
+}
