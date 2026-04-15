@@ -827,6 +827,41 @@ async def get_admin_reports(request: Request):
         }
     }
 
+# Admin: Member Management
+class MemberCreate(BaseModel):
+    name: str
+    position: str
+    photo_url: str
+    contact: str
+
+@api_router.post("/admin/members")
+async def create_member(member: MemberCreate, request: Request):
+    await get_current_admin(request)
+    member_doc = member.model_dump()
+    result = await db.members.insert_one(member_doc)
+    member_doc["id"] = str(result.inserted_id)
+    member_doc.pop("_id", None)
+    return member_doc
+
+@api_router.patch("/admin/members/{member_id}")
+async def update_member(member_id: str, member: MemberCreate, request: Request):
+    await get_current_admin(request)
+    result = await db.members.update_one(
+        {"_id": ObjectId(member_id)},
+        {"$set": member.model_dump()}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Member not found")
+    return {"message": "Member updated successfully"}
+
+@api_router.delete("/admin/members/{member_id}")
+async def delete_member(member_id: str, request: Request):
+    await get_current_admin(request)
+    result = await db.members.delete_one({"_id": ObjectId(member_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Member not found")
+    return {"message": "Member deleted successfully"}
+
 # Include router
 app.include_router(api_router)
 

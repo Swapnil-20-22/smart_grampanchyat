@@ -13,6 +13,8 @@ import {
   LogOut,
   Menu,
   X,
+  BarChart3,
+  Settings,
 } from 'lucide-react';
 
 export const DashboardLayout = () => {
@@ -36,16 +38,21 @@ export const DashboardLayout = () => {
     { path: '/dashboard/notices', label: 'Notices', icon: Bell },
   ];
 
-  const adminNavItems = [
-    { path: '/dashboard/admin/reports', label: 'Admin Reports', icon: Home },
+  const adminManageItems = [
     { path: '/dashboard/admin/users', label: 'Manage Users', icon: Users },
+    { path: '/dashboard/admin/members', label: 'Manage Members', icon: Settings },
     { path: '/dashboard/admin/meetings', label: 'Manage Meetings', icon: Calendar },
     { path: '/dashboard/admin/notices', label: 'Manage Notices', icon: Bell },
   ];
 
-  const navItems = user?.role === 'admin' 
-    ? [...userNavItems, ...adminNavItems] 
-    : userNavItems;
+  const adminReportItems = [
+    { path: '/dashboard/admin/overview', label: 'Overview Report', icon: Home },
+    { path: '/dashboard/admin/report/users', label: 'Users Report', icon: Users },
+    { path: '/dashboard/admin/report/complaints', label: 'Complaints Report', icon: FileText },
+    { path: '/dashboard/admin/report/certificates', label: 'Certificates Report', icon: Award },
+    { path: '/dashboard/admin/report/meetings', label: 'Meetings Report', icon: Calendar },
+    { path: '/dashboard/admin/report/members', label: 'Members Report', icon: BarChart3 },
+  ];
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -90,7 +97,7 @@ export const DashboardLayout = () => {
         </div>
 
         <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
-          {navItems.map((item) => {
+          {userNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             return (
@@ -98,18 +105,70 @@ export const DashboardLayout = () => {
                 key={item.path}
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 ${
                   isActive
                     ? 'bg-[#2D4238] text-white'
                     : 'text-[#1A1A1A] hover:bg-[#E5E0D8]'
                 }`}
                 data-testid={`nav-${item.label.toLowerCase()}`}
               >
-                <Icon size={20} />
-                <span className="font-medium">{item.label}</span>
+                <Icon size={18} />
+                <span className="font-medium text-sm">{item.label}</span>
               </Link>
             );
           })}
+
+          {user?.role === 'admin' && (
+            <>
+              <div className="pt-3 pb-1 px-4">
+                <p className="text-xs font-semibold text-[#4A4A4A] uppercase tracking-wider">Admin Management</p>
+              </div>
+              {adminManageItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-[#C84B31] text-white'
+                        : 'text-[#1A1A1A] hover:bg-[#E5E0D8]'
+                    }`}
+                    data-testid={`nav-${item.label.toLowerCase().replace(/\s/g, '-')}`}
+                  >
+                    <Icon size={18} />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
+
+              <div className="pt-3 pb-1 px-4">
+                <p className="text-xs font-semibold text-[#4A4A4A] uppercase tracking-wider">Reports</p>
+              </div>
+              {adminReportItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-[#C84B31] text-white'
+                        : 'text-[#1A1A1A] hover:bg-[#E5E0D8]'
+                    }`}
+                    data-testid={`nav-${item.label.toLowerCase().replace(/\s/g, '-')}`}
+                  >
+                    <Icon size={18} />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </>
+          )}
         </nav>
 
         <div className="p-4 border-t border-[#DCD7CB] flex-shrink-0">
